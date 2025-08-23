@@ -11,7 +11,8 @@ enum PieceType{
 
 enum Color{
     WHITE,
-    BLACK
+    BLACK,
+    ALLFIELDS
 };
 
 enum CoordinateAxle{
@@ -43,25 +44,9 @@ class Move{
 class Piece{
     private:
         PieceType piecetype;
-        Color color;
-        int position[2]; 
+        Color color; 
 
         public:
-            Piece(PieceType initialPiecetype, Color initialColor, int initialPosition[2]) : piecetype(initialPiecetype), color(initialColor){
-                for (int i = 0; i < 2; i++)
-                position[i] = initialPosition[i];   
+            Piece(PieceType initialPiecetype, Color initialColor) : piecetype(initialPiecetype), color(initialColor){  
             }
-
-            bool checkMove(Move testMove){
-                return false;
-            }
-
-            void updatePosition(){
-
-            }
-
-            void executeMove(){
-
-            }
-          
 };

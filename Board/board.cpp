@@ -1,30 +1,15 @@
 #include <bitset>
 #include <cassert>
-#include <vector>
 #include "../Pieces/piece.cpp"
 
 class Field{
     private:
-        int coordinates[2];
+        std::pair<int,int> coordinates;
         Piece piece;
 
     public:
-        Field(int initialCoordinates[2], Piece initialPiece) : piece(initialPiece){
-            for (int i = 0; i < 2; i++)
-                coordinates[i] = initialCoordinates[i];            
-        }
-};
-
-enum BitBoardType{
-    PAWN,
-    KNIGHT,
-    BISHOP,
-    ROOK,
-    QUEEN,
-    KING,
-    WHITE,
-    BLACK,
-    ALLFIELDS
+        Field(std::pair<int,int> initialCoordinates, Piece initialPiece)
+        : coordinates(initialCoordinates), piece(initialPiece){}
 };
 
 class BitBoard{
@@ -32,18 +17,41 @@ class BitBoard{
        int64_t bits;
 
     public:
-
         int64_t getBits(){
             return bits;
         }
 
-        BitBoardType bitboardtype;
+        PieceType pieceBitboardtype;
+        Color colorBitboardtype;
 
-        BitBoard() : bits(0), bitboardtype(ALLFIELDS){}
-        BitBoard(int64_t initialBits, BitBoardType initialBitBoardType) : bits(initialBits), bitboardtype(initialBitBoardType) {}
+        BitBoard() : bits(0), pieceBitboardtype(PAWN), colorBitboardtype(ALLFIELDS){}
+        BitBoard(int64_t initialBits, PieceType initialPieceBitBoardType, Color initialColorBitboardType)
+        : bits(initialBits), pieceBitboardtype(initialPieceBitBoardType), colorBitboardtype(initialColorBitboardType)  {}
 
-        void convertToCoordinates(){};
-        void display(){};
+        bool checkForMergedBitBoard(){ 
+            return colorBitboardtype != ALLFIELDS;
+        };
+
+        std::vector<std::pair<int,int>> getCoordinateList(){
+            std::vector<std::pair<int, int>> coordinates;
+            for (int i = 0; i < 64; i++) {
+                if (bits & (1LL << i)) {
+                    int x = i % 8;
+                    int y = i / 8;
+                    coordinates.push_back({x, y});
+                }
+            }
+            return coordinates;
+        };
+
+        std::vector<Field> getFieldList(){
+            std::vector<Field> fields;
+            std::vector<std::pair<int,int>> coordinates = getCoordinateList();
+            for (auto coordinate : coordinates){
+                fields.push_back(Field(coordinate, Piece(pieceBitboardtype, colorBitboardtype)));
+            }
+            return fields;
+        };
 };
 
 class Board {
@@ -56,29 +64,35 @@ class Board {
                 bitboards[i] = initialBitboards[i];    
          }
 
-         bool checkBitBoardType(BitBoard bitboard, enum BitBoardType bitboardType){
-            return bitboard.bitboardtype == bitboardType;
+         bool checkBitBoardPieceType(BitBoard bitboard, enum PieceType bitboardType){
+            return bitboard.pieceBitboardtype == bitboardType;
          }
 
-         int findBitBoardIndexOfBitBoardType(enum BitBoardType bitboardType){
+         bool checkBitBoardColorType(BitBoard bitboard, enum Color color){
+            return bitboard.colorBitboardtype == color;
+         }
+
+         int findBitBoardIndexOfBitBoardPieceType(enum PieceType bitboardType){
             int index = 0;
-            while (checkBitBoardType(bitboards[index], bitboardType))
+            while (!checkBitBoardPieceType(bitboards[index], bitboardType))
                 index++;  
             return index;
          }
          
-         u_int16_t findBitBoardOfSpecificPiece(enum BitBoardType Piece, enum BitBoardType Color){
-            int pieceIndex = findBitBoardIndexOfBitBoardType(Piece);
-            int colorIndex = findBitBoardIndexOfBitBoardType(Color);
-            return bitboards[pieceIndex].getBits() & bitboards[colorIndex].getBits();
-         }
+        int findBitBoardIndexOfBitBoardColorType(enum Color color){
+            int index = 0;
+            while (!checkBitBoardColorType(bitboards[index], color))
+                index++;  
+            return index;
+        }
 
-         void listOfBlackPawns(){
+         BitBoard mergeBitBoard(enum PieceType Piece, enum Color color){
+            int pieceIndex = findBitBoardIndexOfBitBoardPieceType(Piece);
+            int colorIndex = findBitBoardIndexOfBitBoardColorType(color);
 
+            u_int16_t bits = bitboards[pieceIndex].getBits() & bitboards[colorIndex].getBits();
+            return BitBoard(bits, Piece, color);
          }
 };
 
-//BitBoard Klasse muss in karthesische Koordinaten umrechnen
-//BitBoard muss Field erstellen
-//Field Klasse muss Fields anzeigen können
-//gemergede BitBoards -> eigene Klasse; irgendwas überlegen 
+//Field Klasse muss Fields anzeigen können 
