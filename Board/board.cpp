@@ -12,6 +12,11 @@ class Field{
         : coordinates(initialCoordinates), piece(initialPiece){}
 };
 
+struct BitBoardType{
+    PieceType piecetype;
+    Color color;
+};
+
 class BitBoard{
     private:
        int64_t bits;
@@ -21,15 +26,14 @@ class BitBoard{
             return bits;
         }
 
-        PieceType pieceBitboardtype;
-        Color colorBitboardtype;
+        BitBoardType bitboardtype;// = {KNIGHT, ALLFIELDS};
 
-        BitBoard() : bits(0), pieceBitboardtype(PAWN), colorBitboardtype(ALLFIELDS){}
-        BitBoard(int64_t initialBits, PieceType initialPieceBitBoardType, Color initialColorBitboardType)
-        : bits(initialBits), pieceBitboardtype(initialPieceBitBoardType), colorBitboardtype(initialColorBitboardType)  {}
+        BitBoard() : bits(0), bitboardtype(){}
+        BitBoard(int64_t initialBits, BitBoardType initialBitBoardType)
+        : bits(initialBits), bitboardtype(initialBitBoardType) {}
 
         bool checkForMergedBitBoard(){ 
-            return colorBitboardtype != ALLFIELDS;
+            return bitboardtype.color != ALLFIELDS;
         };
 
         std::vector<std::pair<int,int>> getCoordinateList(){
@@ -48,7 +52,7 @@ class BitBoard{
             std::vector<Field> fields;
             std::vector<std::pair<int,int>> coordinates = getCoordinateList();
             for (auto coordinate : coordinates){
-                fields.push_back(Field(coordinate, Piece(pieceBitboardtype, colorBitboardtype)));
+                fields.push_back(Field(coordinate, Piece(bitboardtype.piecetype, bitboardtype.color, coordinate)));
             }
             return fields;
         };
@@ -65,11 +69,11 @@ class Board {
          }
 
          bool checkBitBoardPieceType(BitBoard bitboard, enum PieceType bitboardType){
-            return bitboard.pieceBitboardtype == bitboardType;
+            return bitboard.bitboardtype.piecetype == bitboardType;
          }
 
          bool checkBitBoardColorType(BitBoard bitboard, enum Color color){
-            return bitboard.colorBitboardtype == color;
+            return bitboard.bitboardtype.color == color;
          }
 
          int findBitBoardIndexOfBitBoardPieceType(enum PieceType bitboardType){
@@ -86,12 +90,12 @@ class Board {
             return index;
         }
 
-         BitBoard mergeBitBoard(enum PieceType Piece, enum Color color){
-            int pieceIndex = findBitBoardIndexOfBitBoardPieceType(Piece);
+         BitBoard mergeBitBoard(enum PieceType piece, enum Color color){
+            int pieceIndex = findBitBoardIndexOfBitBoardPieceType(piece);
             int colorIndex = findBitBoardIndexOfBitBoardColorType(color);
 
             u_int16_t bits = bitboards[pieceIndex].getBits() & bitboards[colorIndex].getBits();
-            return BitBoard(bits, Piece, color);
+            return BitBoard(bits, {piece, color});
          }
 };
 

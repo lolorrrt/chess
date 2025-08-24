@@ -15,38 +15,41 @@ enum Color{
     ALLFIELDS
 };
 
-enum CoordinateAxle{
-    X,
-    Y
-};
-
-enum MoveDirection{
-    POSITIV = 1,
-    NEGATIVE = -1
-};
-
 class Move{
     private:
-        int absoluteValueMotion[2];
-        MoveDirection directions[2];
+        std::pair<int,int> movementVector;
 
     public:
-        Move(int initialMove[2], MoveDirection initialdirections[2]) {
-            for (int i = 0; i < 2; i++) {
-                this->absoluteValueMotion[i] = initialMove[i];
-                this->directions[i] = initialdirections[i];
-            }
+        Move(std::pair<int,int> initialMovementVector) : movementVector(initialMovementVector) {
+        }
+    
+        int getComponentX(){
+            return movementVector.first;
         }
 
-
+        int getComponentY(){
+            return movementVector.second;
+        }
 };
 
 class Piece{
     private:
         PieceType piecetype;
-        Color color; 
+        Color color;
+        std::pair<int,int>position;
 
         public:
-            Piece(PieceType initialPiecetype, Color initialColor) : piecetype(initialPiecetype), color(initialColor){  
+            Piece(PieceType initialPiecetype, Color initialColor, std::pair<int,int>initialPosition)
+            : piecetype(initialPiecetype), color(initialColor), position(initialPosition){  
+            }
+
+            std::pair<int,int> getCurrentPosition(){
+                return position;
+            }
+
+            std::pair<int,int> setNewPosition(Move move){
+                position.first += move.getComponentX();
+                position.second += move.getComponentY();
+                return position;
             }
 };
