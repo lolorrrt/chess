@@ -3,7 +3,7 @@
 int main() {
     // Create a window (800x800 pixels, with a title "Chessboard")
     sf::RenderWindow window(sf::VideoMode(800, 800), "Chessboard");
-    
+
     // Define the size of the squares (each square is 100x100 pixels)
     int squareSize = 100;
 

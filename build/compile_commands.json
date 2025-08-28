@@ -1,0 +1,8 @@
+[
+{
+  "directory": "/home/laurence-schreiter/GitHub/chess/build",
+  "command": "/usr/bin/c++   -g -o CMakeFiles/Chess.dir/main.cpp.o -c /home/laurence-schreiter/GitHub/chess/main.cpp",
+  "file": "/home/laurence-schreiter/GitHub/chess/main.cpp",
+  "output": "CMakeFiles/Chess.dir/main.cpp.o"
+}
+]

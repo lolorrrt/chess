@@ -1,0 +1,3 @@
+/home/laurence-schreiter/GitHub/chess/build/CMakeFiles/Chess.dir
+/home/laurence-schreiter/GitHub/chess/build/CMakeFiles/edit_cache.dir
+/home/laurence-schreiter/GitHub/chess/build/CMakeFiles/rebuild_cache.dir
