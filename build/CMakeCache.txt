@@ -223,15 +223,6 @@ Chess_IS_TOP_LEVEL:STATIC=ON
 //Value Computed by CMake
 Chess_SOURCE_DIR:STATIC=/home/laurence-schreiter/GitHub/chess
 
-//Value Computed by CMake
-HelloSFML_BINARY_DIR:STATIC=/home/laurence-schreiter/GitHub/chess/build
-
-//Value Computed by CMake
-HelloSFML_IS_TOP_LEVEL:STATIC=ON
-
-//Value Computed by CMake
-HelloSFML_SOURCE_DIR:STATIC=/home/laurence-schreiter/GitHub/chess
-
 //The directory containing a CMake configuration file for SFML.
 SFML_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/SFML
 

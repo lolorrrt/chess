@@ -1182,42 +1182,6 @@
 			"value" : "/home/laurence-schreiter/GitHub/chess"
 		},
 		{
-			"name" : "HelloSFML_BINARY_DIR",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Value Computed by CMake"
-				}
-			],
-			"type" : "STATIC",
-			"value" : "/home/laurence-schreiter/GitHub/chess/build"
-		},
-		{
-			"name" : "HelloSFML_IS_TOP_LEVEL",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Value Computed by CMake"
-				}
-			],
-			"type" : "STATIC",
-			"value" : "ON"
-		},
-		{
-			"name" : "HelloSFML_SOURCE_DIR",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Value Computed by CMake"
-				}
-			],
-			"type" : "STATIC",
-			"value" : "/home/laurence-schreiter/GitHub/chess"
-		},
-		{
 			"name" : "SFML_DIR",
 			"properties" : 
 			[
