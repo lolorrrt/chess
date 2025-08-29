@@ -1,7 +1,8 @@
 # Chess
-Chess application with C++. wxWidgets as GUI.
+Chess application with C++. SFML Library as GUI.
 
 ## useful Links
+[SFML](https://www.sfml-dev.org/)  
 [WebAssembly](https://developer.mozilla.org/en-US/docs/WebAssembly/Guides/C_to_Wasm)  
 [wxWidgets](https://docs.wxwidgets.org/latest/overview_helloworld.html)  
 
