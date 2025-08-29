@@ -1,15 +1,31 @@
 #include <bitset>
 #include <cassert>
 #include "../Pieces/piece.cpp"
+#include <SFML/Graphics.hpp>
 
 class Field{
     private:
+        const float squareSize = 100;
         std::pair<int,int> coordinates;
         Piece piece;
+        sf::RectangleShape square;
 
     public:
         Field(std::pair<int,int> initialCoordinates, Piece initialPiece)
-        : coordinates(initialCoordinates), piece(initialPiece){}
+        : coordinates(initialCoordinates), piece(initialPiece){
+
+            square.setSize(sf::Vector2f(squareSize, squareSize));
+            square.setPosition(coordinates.first * squareSize, coordinates.second * squareSize);
+            
+            if ((coordinates.first + coordinates.second) % 2 == 1)
+                square.setFillColor(sf::Color::White);
+            else
+                square.setFillColor(sf::Color::Black);
+            }
+        
+        sf::RectangleShape getSquare(){
+            return square;
+        }
 };
 
 struct BitBoardType{
@@ -97,6 +113,10 @@ class Board {
             u_int16_t bits = bitboards[pieceIndex].getBits() & bitboards[colorIndex].getBits();
             return BitBoard(bits, {piece, color});
          }
+
+         BitBoard updateBitboard(BitBoard bitboard, Move move, Piece movedPiece){
+            return bitboard; // To be implemented
+         }
 };
 
-//Field Klasse muss Fields anzeigen können 
+//Field Klasse muss Fields anzeigen können

@@ -1,13 +1,40 @@
-#include <SFML/Graphics.hpp>
+#include <SFML/Window/Event.hpp>
+#include <iostream>
+#include <functional>
+#include "Board/board.cpp"
+
+std::vector<Field> chessboardFields;
+
+void drawChessboard(sf::RenderWindow &window){
+    for (int row = 0; row < 8; row++){
+        for (int column = 0; column < 8; column++){
+            Field field({row, column}, Piece{NOPIECE, NOCOLOR, {row, column}});
+            chessboardFields.push_back(field);
+            window.draw(field.getSquare());
+        }   
+    }
+};
+
+BitBoard blackBitBoard(0x000000000000FF00, {PAWN, BLACK});
+BitBoard whiteBitBoard(0x00FF000000000000, {PAWN, WHITE});
+BitBoard knightBitBoard(0x0000000000000042, {KNIGHT, ALLFIELDS});
+BitBoard bishopBitBoard(0x0000000000000024, {BISHOP, ALLFIELDS});
+BitBoard rookBitBoard(0x0000000000000081, {ROOK, ALLFIELDS});
+BitBoard queenBitBoard(0x0000000000000008, {QUEEN, ALLFIELDS});
+BitBoard kingBitBoard(0x0000000000000010, {KING, ALLFIELDS});
+
+void drawPieces(sf::RenderWindow &window){
+    // Placeholder for drawing pieces
+}
 
 int main() {
-    // Create a window (800x800 pixels, with a title "Chessboard")
     sf::RenderWindow window(sf::VideoMode(800, 800), "Chessboard");
-    
-    // Define the size of the squares (each square is 100x100 pixels)
-    int squareSize = 100;
+    window.clear(sf::Color::White);
 
-    // Chessboard loop
+    drawChessboard(window);
+    drawPieces(window);
+    window.display();
+    
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
@@ -15,33 +42,8 @@ int main() {
                 window.close();
             }
         }
-
-        // Clear the window with a white color (background)
-        window.clear(sf::Color::White);
-
-        // Draw the chessboard (8x8 grid)
-        for (int row = 0; row < 8; ++row) {
-            for (int col = 0; col < 8; ++col) {
-                // Create a rectangle for each square
-                sf::RectangleShape square(sf::Vector2f(squareSize, squareSize));
-
-                // Set the position of the square (top-left corner)
-                square.setPosition(col * squareSize, row * squareSize);
-
-                // Alternate colors for the squares (black and white)
-                if ((row + col) % 2 == 1) {
-                    square.setFillColor(sf::Color::White); // White squares
-                } else {
-                    square.setFillColor(sf::Color::Black); // Black squares
-                }
-
-                // Draw the square
-                window.draw(square);
-            }
-        }
-
-        // Display the contents of the window
-        window.display();
+        
+        
     }
 
     return 0;

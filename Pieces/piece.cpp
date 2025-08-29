@@ -6,12 +6,14 @@ enum PieceType{
     BISHOP,
     ROOK,
     QUEEN,
-    KING
+    KING,
+    NOPIECE
 };
 
 enum Color{
     WHITE,
     BLACK,
+    NOCOLOR,
     ALLFIELDS
 };
 
