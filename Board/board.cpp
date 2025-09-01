@@ -22,7 +22,10 @@ class Field{
             else
                 square.setFillColor(sf::Color::Black);
             }
-        
+        Piece getPiece(){
+            return piece;
+        }
+
         sf::RectangleShape getSquare(){
             return square;
         }
@@ -42,14 +45,14 @@ class BitBoard{
             return bits;
         }
 
-        BitBoardType bitboardtype;// = {KNIGHT, ALLFIELDS};
+        BitBoardType bitboardtype;
 
         BitBoard() : bits(0), bitboardtype(){}
         BitBoard(int64_t initialBits, BitBoardType initialBitBoardType)
         : bits(initialBits), bitboardtype(initialBitBoardType) {}
 
         bool checkForMergedBitBoard(){ 
-            return bitboardtype.color != ALLFIELDS;
+            return bitboardtype.color != UNDEFINEDCOLOR && bitboardtype.piecetype != UNDEFINEDPIECE;
         };
 
         std::vector<std::pair<int,int>> getCoordinateList(){
@@ -68,20 +71,28 @@ class BitBoard{
             std::vector<Field> fields;
             std::vector<std::pair<int,int>> coordinates = getCoordinateList();
             for (auto coordinate : coordinates){
+                coordinate.first = coordinate.first * 100;
+                coordinate.second = coordinate.second * 100;
                 fields.push_back(Field(coordinate, Piece(bitboardtype.piecetype, bitboardtype.color, coordinate)));
             }
             return fields;
+        };
+
+        std::vector<Field> drawBitBoardPieces(sf::RenderWindow &window){
+            std::vector<Field> fieldList = getFieldList();
+            for (auto field : fieldList)
+                field.getPiece().draw();
+            return fieldList;
         };
 };
 
 class Board {
     private:
-        BitBoard bitboards[8];
+        std::vector<BitBoard> bitboards;
 
     public:
-        Board(BitBoard initialBitboards[8]) {
-            for (int i = 0; i < 8; i++)
-                bitboards[i] = initialBitboards[i];    
+        Board(std::vector<BitBoard> initialBitboards) : bitboards(initialBitboards) {
+               
          }
 
          bool checkBitBoardPieceType(BitBoard bitboard, enum PieceType bitboardType){

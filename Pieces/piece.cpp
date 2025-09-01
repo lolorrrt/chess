@@ -7,14 +7,13 @@ enum PieceType{
     ROOK,
     QUEEN,
     KING,
-    NOPIECE
+    UNDEFINEDPIECE
 };
 
 enum Color{
     WHITE,
     BLACK,
-    NOCOLOR,
-    ALLFIELDS
+    UNDEFINEDCOLOR
 };
 
 class Move{
@@ -44,7 +43,7 @@ class Piece{
         public:
             Piece(PieceType initialPiecetype, Color initialColor, std::pair<int,int>initialPosition)
             : piecetype(initialPiecetype), color(initialColor), position(initialPosition){ 
-                if (color == NOCOLOR || piecetype == NOPIECE){
+                if (color == UNDEFINEDCOLOR || piecetype == UNDEFINEDPIECE){
                     return;
                 }
                 pieceTexture.loadFromFile("./images/" + std::to_string(color) + std::to_string(piecetype) + ".jpeg");
@@ -64,7 +63,7 @@ class Piece{
                 sf::Sprite pieceSprite;
                 pieceSprite.setTexture(pieceTexture);
                 pieceSprite.setScale(0.3f, 0.3f); 
-                pieceSprite.setPosition(15,15);
+                pieceSprite.setPosition(position.first + 15,position.second +15);
 
                 return pieceSprite;
             }

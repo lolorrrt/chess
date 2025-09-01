@@ -3,32 +3,61 @@
 #include <functional>
 #include "Board/board.cpp"
 
+BitBoard blackBitBoard(0xFFFF000000000000, {UNDEFINEDPIECE, BLACK});
+BitBoard whiteBitBoard(0x000000000000FFFF, {UNDEFINEDPIECE, WHITE});
+BitBoard knightBitBoard(0x4200000000000042, {KNIGHT, UNDEFINEDCOLOR});
+BitBoard bishopBitBoard(0x2400000000000024, {BISHOP, UNDEFINEDCOLOR});
+BitBoard rookBitBoard(0x8100000000000081, {ROOK, UNDEFINEDCOLOR});
+BitBoard queenBitBoard(0x0800000000000008, {QUEEN, UNDEFINEDCOLOR});
+BitBoard kingBitBoard(0x1000000000000010, {KING, UNDEFINEDCOLOR});
+
 std::vector<Field> chessboardFields;
+std::vector<BitBoard> chessboardBitBoards  = {blackBitBoard, whiteBitBoard, knightBitBoard, bishopBitBoard, rookBitBoard, queenBitBoard, kingBitBoard};
 
 void drawChessboard(sf::RenderWindow &window){
     for (int row = 0; row < 8; row++){
         for (int column = 0; column < 8; column++){
-            Field field({row, column}, Piece{NOPIECE, NOCOLOR, {row, column}});
+            Field field({row, column}, Piece{UNDEFINEDPIECE, UNDEFINEDCOLOR, {row, column}});
             chessboardFields.push_back(field);
             window.draw(field.getSquare());
         }   
     }
 };
 
-BitBoard blackBitBoard(0x000000000000FF00, {PAWN, BLACK});
-BitBoard whiteBitBoard(0x00FF000000000000, {PAWN, WHITE});
-BitBoard knightBitBoard(0x0000000000000042, {KNIGHT, ALLFIELDS});
-BitBoard bishopBitBoard(0x0000000000000024, {BISHOP, ALLFIELDS});
-BitBoard rookBitBoard(0x0000000000000081, {ROOK, ALLFIELDS});
-BitBoard queenBitBoard(0x0000000000000008, {QUEEN, ALLFIELDS});
-BitBoard kingBitBoard(0x0000000000000010, {KING, ALLFIELDS});
 
-void drawPieces(sf::RenderWindow &window){
-    Piece whiteRook(BISHOP, WHITE, {0,0});
 
-    sf::Sprite whiteRookSprite = whiteRook.draw();
-    window.draw(whiteRookSprite);
+void drawPieces(sf::RenderWindow &window){ 
+    Board chessboard = Board(chessboardBitBoards);
 
+    BitBoard whitePawns = chessboard.mergeBitBoard(PAWN, WHITE);
+    BitBoard blackPawns = chessboard.mergeBitBoard(PAWN, BLACK);
+    //BitBoard whiteKnights = chessboard.mergeBitBoard(KNIGHT, WHITE);
+    //BitBoard blackKnights = chessboard.mergeBitBoard(KNIGHT, BLACK);
+    BitBoard whiteBishops = chessboard.mergeBitBoard(BISHOP, WHITE);
+    BitBoard blackBishops = chessboard.mergeBitBoard(BISHOP, BLACK);
+    BitBoard whiteRooks = chessboard.mergeBitBoard(ROOK, WHITE);
+    BitBoard blackRooks = chessboard.mergeBitBoard(ROOK, BLACK);
+    BitBoard whiteQueens = chessboard.mergeBitBoard(QUEEN, WHITE);
+    BitBoard blackQueens = chessboard.mergeBitBoard(QUEEN, BLACK);
+    BitBoard whiteKings = chessboard.mergeBitBoard(KING, WHITE);
+    BitBoard blackKings = chessboard.mergeBitBoard(KING, BLACK);
+
+    std::vector<Field> whitePawnList = whitePawns.drawBitBoardPieces(window);
+    std::vector<Field> blackPawnList = blackPawns.drawBitBoardPieces(window);
+    //std::vector<Field> whiteKnightList = whiteKnights.drawBitBoardPieces(window);
+    //std::vector<Field> blackKnightList = blackKnights.drawBitBoardPieces(window);
+    std::vector<Field> whiteBishopList = whiteBishops.drawBitBoardPieces(window);
+    std::vector<Field> blackBishopList = blackBishops.drawBitBoardPieces(window);
+    std::vector<Field> whiteRookList = whiteRooks.drawBitBoardPieces(window);
+    std::vector<Field> blackRookList = blackRooks.drawBitBoardPieces(window);
+    std::vector<Field> whiteQueenList = whiteQueens.drawBitBoardPieces(window);
+    std::vector<Field> blackQueenList = blackQueens.drawBitBoardPieces(window);
+    std::vector<Field> whiteKingList = whiteKings.drawBitBoardPieces(window);
+    std::vector<Field> blackKingList = blackKings.drawBitBoardPieces(window);
+
+    for (auto field : blackQueenList){
+        window.draw(field.getPiece().draw());
+    }
 }
 
 int main() {
