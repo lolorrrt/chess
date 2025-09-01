@@ -24,7 +24,11 @@ BitBoard queenBitBoard(0x0000000000000008, {QUEEN, ALLFIELDS});
 BitBoard kingBitBoard(0x0000000000000010, {KING, ALLFIELDS});
 
 void drawPieces(sf::RenderWindow &window){
-    // Placeholder for drawing pieces
+    Piece whiteRook(BISHOP, WHITE, {0,0});
+
+    sf::Sprite whiteRookSprite = whiteRook.draw();
+    window.draw(whiteRookSprite);
+
 }
 
 int main() {
@@ -34,6 +38,7 @@ int main() {
     drawChessboard(window);
     drawPieces(window);
     window.display();
+
     
     while (window.isOpen()) {
         sf::Event event;
