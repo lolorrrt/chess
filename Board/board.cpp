@@ -2,6 +2,7 @@
 #include <cassert>
 #include "../Pieces/piece.cpp"
 #include <SFML/Graphics.hpp>
+#include <iostream>
 
 class Field{
     private:
@@ -80,8 +81,8 @@ class BitBoard{
 
         std::vector<Field> drawBitBoardPieces(sf::RenderWindow &window){
             std::vector<Field> fieldList = getFieldList();
-            for (auto field : fieldList)
-                field.getPiece().draw();
+            for (Field field : fieldList)
+                window.draw(field.getPiece().draw());
             return fieldList;
         };
 };
@@ -120,8 +121,8 @@ class Board {
          BitBoard mergeBitBoard(enum PieceType piece, enum Color color){
             int pieceIndex = findBitBoardIndexOfBitBoardPieceType(piece);
             int colorIndex = findBitBoardIndexOfBitBoardColorType(color);
-
-            u_int16_t bits = bitboards[pieceIndex].getBits() & bitboards[colorIndex].getBits();
+            int64_t bits = bitboards[pieceIndex].getBits() & bitboards[colorIndex].getBits();
+            
             return BitBoard(bits, {piece, color});
          }
 
