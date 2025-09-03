@@ -58,21 +58,39 @@ void drawPieces(sf::RenderWindow &window){
 
 }
 
+void drawTextBox(sf::RenderWindow &window){
+    sf::RectangleShape textBox;
+    textBox.setSize(sf::Vector2f(200, 200));
+    textBox.setPosition(800, 0);
+    textBox.setFillColor(sf::Color(200, 200, 200));
+    window.draw(textBox);
+}
 int main() {
-    sf::RenderWindow window(sf::VideoMode(800, 800), "Chess");
+    sf::RenderWindow window(sf::VideoMode(1000, 800), "Chess");
     window.clear(sf::Color::White);
 
     drawChessboard(window);
     drawPieces(window);
+    drawTextBox(window);
     window.display();
 
+    sf::Event userInput;
+    userInput.type = sf::Event::TextEntered;
     
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
                 window.close();
+            std::cout << "select Field" << std::endl;
+            }if (event.type == sf::Event::MouseButtonPressed)
+            {
+                sf::Vector2 mousePosition = sf::Mouse::getPosition(window);
+                std::cout << mousePosition.x << std::endl;
+                std::cout << mousePosition.y << std::endl;
             }
+            
+            
         }
         
         
