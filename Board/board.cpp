@@ -53,7 +53,7 @@ class BitBoard{
         : bits(initialBits), bitboardtype(initialBitBoardType) {}
 
         bool checkForMergedBitBoard(){ 
-            return bitboardtype.color != UNDEFINEDCOLOR && bitboardtype.piecetype != UNDEFINEDPIECE;
+            return bitboardtype.color != UNDEFINED_COLOR && bitboardtype.piecetype != UNDEFINED_PIECE;
         };
 
         std::vector<std::pair<int,int>> getCoordinateList(){
@@ -85,6 +85,11 @@ class BitBoard{
                 window.draw(field.getPiece().draw());
             return fieldList;
         };
+
+        void updateChessBoardFieldList(std::vector<Field> chessboardFields){
+
+        }
+
 };
 
 class Board {
@@ -128,6 +133,37 @@ class Board {
 
          BitBoard updateBitboard(BitBoard bitboard, Move move, Piece movedPiece){
             return bitboard; // To be implemented
+         }
+
+         bool isMerged(){
+            return bitboards.size() > 8;
+         }
+
+         Board mergeChessBoard(){
+            BitBoard whitePawns = mergeBitBoard(PAWN, WHITE);
+            BitBoard blackPawns = mergeBitBoard(PAWN, BLACK);
+            BitBoard whiteKnights = mergeBitBoard(KNIGHT, WHITE);
+            BitBoard blackKnights = mergeBitBoard(KNIGHT, BLACK);
+            BitBoard whiteBishops = mergeBitBoard(BISHOP, WHITE);
+            BitBoard blackBishops = mergeBitBoard(BISHOP, BLACK);
+            BitBoard whiteRooks = mergeBitBoard(ROOK, WHITE);
+            BitBoard blackRooks = mergeBitBoard(ROOK, BLACK);
+            BitBoard whiteQueens = mergeBitBoard(QUEEN, WHITE);
+            BitBoard blackQueens = mergeBitBoard(QUEEN, BLACK);
+            BitBoard whiteKings = mergeBitBoard(KING, WHITE);
+            BitBoard blackKings = mergeBitBoard(KING, BLACK);
+
+            std::vector<BitBoard> initialBitBoards = {whitePawns, blackPawns, whiteKnights, blackKnights, whiteBishops, blackBishops, whiteRooks, blackRooks, whiteQueens, blackQueens, whiteKings, blackKings};
+            return Board(initialBitBoards);
+         }
+
+         void draw(sf::RenderWindow &window){
+            if (isMerged())
+                for(auto bitboards : bitboards)
+                    bitboards.drawBitBoardPieces(window);
+            else 
+                std::cout << "Bitboards not merged! Cannot be drawn." << std::endl;
+            
          }
 };
 
