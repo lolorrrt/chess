@@ -1,5 +1,5 @@
 #include <vector>
-
+#include <SFML/Graphics.hpp>
 enum PieceType{
     PAWN,
     KNIGHT,
@@ -7,14 +7,13 @@ enum PieceType{
     ROOK,
     QUEEN,
     KING,
-    NOPIECE
+    UNDEFINED_PIECE
 };
 
 enum Color{
     WHITE,
     BLACK,
-    NOCOLOR,
-    ALLFIELDS
+    UNDEFINED_COLOR
 };
 
 class Move{
@@ -40,9 +39,18 @@ class Piece{
         Color color;
         std::pair<int,int>position;
 
+        sf::Texture pieceTexture;
         public:
             Piece(PieceType initialPiecetype, Color initialColor, std::pair<int,int>initialPosition)
-            : piecetype(initialPiecetype), color(initialColor), position(initialPosition){  
+            : piecetype(initialPiecetype), color(initialColor), position(initialPosition){ 
+                if (color == UNDEFINED_COLOR || piecetype == UNDEFINED_PIECE){
+                    return;
+                }
+                pieceTexture.loadFromFile("./images/" + std::to_string(color) + std::to_string(piecetype) + ".jpeg");
+            }
+
+            PieceType getPieceType(){
+                return piecetype;
             }
 
             std::pair<int,int> getCurrentPosition(){
@@ -53,5 +61,14 @@ class Piece{
                 position.first += move.getComponentX();
                 position.second += move.getComponentY();
                 return position;
+            }
+
+            sf::Sprite draw(){
+                sf::Sprite pieceSprite;
+                pieceSprite.setTexture(pieceTexture);
+                pieceSprite.setScale(0.3f, 0.3f); 
+                pieceSprite.setPosition(position.first + 15,position.second +15);
+
+                return pieceSprite;
             }
 };

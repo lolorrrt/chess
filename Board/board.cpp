@@ -2,6 +2,7 @@
 #include <cassert>
 #include "../Pieces/piece.cpp"
 #include <SFML/Graphics.hpp>
+#include <iostream>
 
 class Field{
     private:
@@ -22,7 +23,10 @@ class Field{
             else
                 square.setFillColor(sf::Color::Black);
             }
-        
+        Piece getPiece(){
+            return piece;
+        }
+
         sf::RectangleShape getSquare(){
             return square;
         }
@@ -42,14 +46,14 @@ class BitBoard{
             return bits;
         }
 
-        BitBoardType bitboardtype;// = {KNIGHT, ALLFIELDS};
+        BitBoardType bitboardtype;
 
         BitBoard() : bits(0), bitboardtype(){}
         BitBoard(int64_t initialBits, BitBoardType initialBitBoardType)
         : bits(initialBits), bitboardtype(initialBitBoardType) {}
 
         bool checkForMergedBitBoard(){ 
-            return bitboardtype.color != ALLFIELDS;
+            return bitboardtype.color != UNDEFINED_COLOR && bitboardtype.piecetype != UNDEFINED_PIECE;
         };
 
         std::vector<std::pair<int,int>> getCoordinateList(){
@@ -68,20 +72,33 @@ class BitBoard{
             std::vector<Field> fields;
             std::vector<std::pair<int,int>> coordinates = getCoordinateList();
             for (auto coordinate : coordinates){
+                coordinate.first = coordinate.first * 100;
+                coordinate.second = coordinate.second * 100;
                 fields.push_back(Field(coordinate, Piece(bitboardtype.piecetype, bitboardtype.color, coordinate)));
             }
             return fields;
         };
+
+        std::vector<Field> drawBitBoardPieces(sf::RenderWindow &window){
+            std::vector<Field> fieldList = getFieldList();
+            for (Field field : fieldList)
+                window.draw(field.getPiece().draw());
+            return fieldList;
+        };
+
+        void updateChessBoardFieldList(std::vector<Field> chessboardFields){
+
+        }
+
 };
 
 class Board {
     private:
-        BitBoard bitboards[8];
+        std::vector<BitBoard> bitboards;
 
     public:
-        Board(BitBoard initialBitboards[8]) {
-            for (int i = 0; i < 8; i++)
-                bitboards[i] = initialBitboards[i];    
+        Board(std::vector<BitBoard> initialBitboards) : bitboards(initialBitboards) {
+               
          }
 
          bool checkBitBoardPieceType(BitBoard bitboard, enum PieceType bitboardType){
@@ -109,13 +126,44 @@ class Board {
          BitBoard mergeBitBoard(enum PieceType piece, enum Color color){
             int pieceIndex = findBitBoardIndexOfBitBoardPieceType(piece);
             int colorIndex = findBitBoardIndexOfBitBoardColorType(color);
-
-            u_int16_t bits = bitboards[pieceIndex].getBits() & bitboards[colorIndex].getBits();
+            int64_t bits = bitboards[pieceIndex].getBits() & bitboards[colorIndex].getBits();
+            
             return BitBoard(bits, {piece, color});
          }
 
          BitBoard updateBitboard(BitBoard bitboard, Move move, Piece movedPiece){
             return bitboard; // To be implemented
+         }
+
+         bool isMerged(){
+            return bitboards.size() > 8;
+         }
+
+         Board mergeChessBoard(){
+            BitBoard whitePawns = mergeBitBoard(PAWN, WHITE);
+            BitBoard blackPawns = mergeBitBoard(PAWN, BLACK);
+            BitBoard whiteKnights = mergeBitBoard(KNIGHT, WHITE);
+            BitBoard blackKnights = mergeBitBoard(KNIGHT, BLACK);
+            BitBoard whiteBishops = mergeBitBoard(BISHOP, WHITE);
+            BitBoard blackBishops = mergeBitBoard(BISHOP, BLACK);
+            BitBoard whiteRooks = mergeBitBoard(ROOK, WHITE);
+            BitBoard blackRooks = mergeBitBoard(ROOK, BLACK);
+            BitBoard whiteQueens = mergeBitBoard(QUEEN, WHITE);
+            BitBoard blackQueens = mergeBitBoard(QUEEN, BLACK);
+            BitBoard whiteKings = mergeBitBoard(KING, WHITE);
+            BitBoard blackKings = mergeBitBoard(KING, BLACK);
+
+            std::vector<BitBoard> initialBitBoards = {whitePawns, blackPawns, whiteKnights, blackKnights, whiteBishops, blackBishops, whiteRooks, blackRooks, whiteQueens, blackQueens, whiteKings, blackKings};
+            return Board(initialBitBoards);
+         }
+
+         void draw(sf::RenderWindow &window){
+            if (isMerged())
+                for(auto bitboards : bitboards)
+                    bitboards.drawBitBoardPieces(window);
+            else 
+                std::cout << "Bitboards not merged! Cannot be drawn." << std::endl;
+            
          }
 };
 
