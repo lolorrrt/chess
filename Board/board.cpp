@@ -10,8 +10,23 @@ class Field{
         std::pair<int,int> coordinates;
         Piece piece;
         sf::RectangleShape square;
-
+        sf::Texture pieceTexture;
     public:
+
+        Field(const Field& other)
+        : coordinates(other.coordinates), piece(other.piece), square(other.square) {
+        }
+
+
+        Field& operator=(const Field& other) {
+            if (this != &other) {
+                coordinates = other.coordinates;
+                piece = other.piece;
+                square = other.square;
+            }
+            return *this;
+        }
+
         Field(std::pair<int,int> initialCoordinates, Piece initialPiece)
         : coordinates(initialCoordinates), piece(initialPiece){
 
@@ -19,9 +34,9 @@ class Field{
             square.setPosition(coordinates.first * squareSize, coordinates.second * squareSize);
             
             if ((coordinates.first + coordinates.second) % 2 == 1)
-                square.setFillColor(sf::Color::White);
+                square.setFillColor(sf::Color::Blue);
             else
-                square.setFillColor(sf::Color::Black);
+                square.setFillColor(sf::Color::Red);
             }
         Piece getPiece(){
             return piece;
@@ -29,6 +44,25 @@ class Field{
 
         sf::RectangleShape getSquare(){
             return square;
+        }
+
+        int getIndex(){
+            return coordinates.second * 8 + coordinates.first;
+        }
+
+        sf::Sprite drawPiece(){
+            pieceTexture.loadFromFile("./images/" + std::to_string(piece.getColor()) + std::to_string(piece.getPieceType()) + ".jpeg");
+            sf::Sprite pieceSprite;
+            pieceSprite.setTexture(pieceTexture);
+            pieceSprite.setScale(0.3f, 0.3f); 
+            pieceSprite.setPosition(coordinates.first *100+ 15,coordinates.second *100+15);
+
+            return pieceSprite;
+        }
+
+        void draw(sf::RenderWindow &window){
+            window.draw(square);
+            window.draw(drawPiece());
         }
 };
 
@@ -68,28 +102,29 @@ class BitBoard{
             return coordinates;
         };
 
-        std::vector<Field> getFieldList(){
+        std::vector<Field> getFieldListWithPiecesOfBitboard(){
             std::vector<Field> fields;
             std::vector<std::pair<int,int>> coordinates = getCoordinateList();
             for (auto coordinate : coordinates){
-                coordinate.first = coordinate.first * 100;
-                coordinate.second = coordinate.second * 100;
-                fields.push_back(Field(coordinate, Piece(bitboardtype.piecetype, bitboardtype.color, coordinate)));
+                fields.push_back(Field(coordinate, Piece(bitboardtype.piecetype, bitboardtype.color)));
             }
             return fields;
         };
 
         std::vector<Field> drawBitBoardPieces(sf::RenderWindow &window){
-            std::vector<Field> fieldList = getFieldList();
+            std::vector<Field> fieldList = getFieldListWithPiecesOfBitboard();
             for (Field field : fieldList)
-                window.draw(field.getPiece().draw());
+                field.draw(window);
             return fieldList;
         };
 
-        void updateChessBoardFieldList(std::vector<Field> chessboardFields){
-
+        std::vector<Field> addFieldsToChessboard(std::vector<Field> chessboardFields){
+            std::vector<Field> fieldList = getFieldListWithPiecesOfBitboard();
+            for (Field field : fieldList){
+                chessboardFields[field.getIndex()] = field;
+            }
+            return chessboardFields;
         }
-
 };
 
 class Board {
@@ -157,12 +192,16 @@ class Board {
             return Board(initialBitBoards);
          }
 
-         void draw(sf::RenderWindow &window){
+         void draw(sf::RenderWindow &window, std::vector<Field> chessboardFields){
             if (isMerged())
-                for(auto bitboards : bitboards)
+                for(auto bitboards : bitboards){
                     bitboards.drawBitBoardPieces(window);
+                    //bitboards.addFieldsToChessboard(chessboardFields);
+                }
+                    
             else 
                 std::cout << "Bitboards not merged! Cannot be drawn." << std::endl;
+            
             
          }
 };
