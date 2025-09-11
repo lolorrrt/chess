@@ -13,20 +13,6 @@ class Field{
         sf::Texture pieceTexture;
     public:
 
-        Field(const Field& other)
-        : coordinates(other.coordinates), piece(other.piece), square(other.square) {
-        }
-
-
-        Field& operator=(const Field& other) {
-            if (this != &other) {
-                coordinates = other.coordinates;
-                piece = other.piece;
-                square = other.square;
-            }
-            return *this;
-        }
-
         Field(std::pair<int,int> initialCoordinates, Piece initialPiece)
         : coordinates(initialCoordinates), piece(initialPiece){
 
@@ -51,6 +37,9 @@ class Field{
         }
 
         sf::Sprite drawPiece(){
+            if (piece.getPieceType() == UNDEFINED_PIECE || piece.getColor() == UNDEFINED_COLOR)
+                return sf::Sprite();
+                
             pieceTexture.loadFromFile("./images/" + std::to_string(piece.getColor()) + std::to_string(piece.getPieceType()) + ".jpeg");
             sf::Sprite pieceSprite;
             pieceSprite.setTexture(pieceTexture);
@@ -121,7 +110,7 @@ class BitBoard{
         std::vector<Field> addFieldsToChessboard(std::vector<Field> chessboardFields){
             std::vector<Field> fieldList = getFieldListWithPiecesOfBitboard();
             for (Field field : fieldList){
-                chessboardFields[field.getIndex()] = field;
+                //chessboardFields[field.getIndex()] = field;
             }
             return chessboardFields;
         }
@@ -192,17 +181,26 @@ class Board {
             return Board(initialBitBoards);
          }
 
-         void draw(sf::RenderWindow &window, std::vector<Field> chessboardFields){
-            if (isMerged())
+         std::vector<Field> drawOccupiedFields(sf::RenderWindow &window){
+            std::vector<Field> occupiedFields;
+            if (isMerged()){
                 for(auto bitboards : bitboards){
-                    bitboards.drawBitBoardPieces(window);
-                    //bitboards.addFieldsToChessboard(chessboardFields);
+                    std::vector<Field> updatedFields = bitboards.drawBitBoardPieces(window);
+                    for (Field field : updatedFields)
+                        occupiedFields.push_back(field);
                 }
-                    
+            }      
             else 
                 std::cout << "Bitboards not merged! Cannot be drawn." << std::endl;
+            return occupiedFields;
             
-            
+         }
+
+         std::vector<Field> drawUnoccupiedFields(sf::RenderWindow &window){
+            int blackBitboardIndex = findBitBoardIndexOfBitBoardColorType(BLACK);
+            int whiteBitboardIndex = findBitBoardIndexOfBitBoardColorType(WHITE);
+            BitBoard unoccupiedBitBoard = BitBoard (~(bitboards[blackBitboardIndex].getBits()) & ~(bitboards[whiteBitboardIndex].getBits()), {UNDEFINED_PIECE, UNDEFINED_COLOR});
+            return unoccupiedBitBoard.drawBitBoardPieces(window);
          }
 };
 

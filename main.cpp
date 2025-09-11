@@ -13,17 +13,6 @@ BitBoard rookBitBoard(0x8100000000000081, {ROOK, UNDEFINED_COLOR});
 BitBoard queenBitBoard(0x0800000000000008, {QUEEN, UNDEFINED_COLOR});
 BitBoard kingBitBoard(0x1000000000000010, {KING, UNDEFINED_COLOR});
 
-std::vector<Field> chessboardFields;
-
-void drawChessboard(sf::RenderWindow &window){
-    for (int row = 0; row < 8; row++){
-        for (int column = 0; column < 8; column++){
-            Field field({row, column}, Piece{UNDEFINED_PIECE, UNDEFINED_COLOR});
-            chessboardFields.push_back(field);
-        }   
-    }
-};
-
 void drawTextBox(sf::RenderWindow &window){
     sf::RectangleShape textBox;
     textBox.setSize(sf::Vector2f(200, 200));
@@ -31,16 +20,20 @@ void drawTextBox(sf::RenderWindow &window){
     textBox.setFillColor(sf::Color(200, 200, 200));
     window.draw(textBox);
 }
+
 int main() {
     sf::RenderWindow window(sf::VideoMode(1000, 1000), "Chess");
     window.clear(sf::Color::White);
-    std::vector<Field> chessboardFields;
+
     std::vector<BitBoard> chessboardBitBoards  = {blackBitBoard, whiteBitBoard, pawnBitBoard, knightBitBoard, bishopBitBoard, rookBitBoard, queenBitBoard, kingBitBoard};
     Board chessboard = Board(chessboardBitBoards);
 
     Board mergedChessBoard = chessboard.mergeChessBoard();
     drawTextBox(window);
-    mergedChessBoard.draw(window, chessboardFields);
+    
+    std::vector<Field> occupiedFieldList = mergedChessBoard.drawOccupiedFields(window);
+    chessboard.drawUnoccupiedFields(window);
+    
     //Field field = Field({7,7}, Piece(PAWN, BLACK));
     //field.draw(window);
     window.display();
@@ -57,9 +50,11 @@ int main() {
             }if (event.type == sf::Event::MouseButtonPressed)
             {
                 sf::Vector2 mousePosition = sf::Mouse::getPosition(window);
-                Field selectedField = chessboardFields[(mousePosition.y/100) * 8 + (mousePosition.x/100)];
-                Piece selectedPiece = selectedField.getPiece();
-                std::cout << "Selected piece: " << selectedPiece.getPieceType() << "at: " << std::endl;
+                //Field selectedField = chessboardFields[0];
+                std::cout << mousePosition.x << std::endl;
+                std::cout << mousePosition.y << std::endl;
+                //Piece selectedPiece = selectedField.getPiece();
+                //std::cout << "Selected piece: " << selectedPiece.getPieceType() << "at: " << std::endl;
                 //std::cout << selectedPiece.getCurrentPosition().first << std::endl;
                 //std::cout << selectedPiece.getCurrentPosition().second << std::endl;
             }
