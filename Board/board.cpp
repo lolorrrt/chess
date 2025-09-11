@@ -57,6 +57,10 @@ class Field{
         void undrawPiece(sf::RenderWindow &window){
             window.draw(square);
         }
+
+        bool isOutOfBounds(){
+            return coordinates.first < 0 || coordinates.first > 7 || coordinates.second < 0 || coordinates.second > 7;
+        }
 };
 
 struct BitBoardType{
@@ -110,14 +114,6 @@ class BitBoard{
                 field.draw(window);
             return fieldList;
         };
-
-        std::vector<Field> addFieldsToChessboard(std::vector<Field> chessboardFields){
-            std::vector<Field> fieldList = getFieldListWithPiecesOfBitboard();
-            for (Field field : fieldList){
-                //chessboardFields[field.getIndex()] = field;
-            }
-            return chessboardFields;
-        }
 };
 
 class Board {
@@ -125,6 +121,7 @@ class Board {
         std::vector<BitBoard> bitboards;
 
     public:
+
         Board(std::vector<BitBoard> initialBitboards) : bitboards(initialBitboards) {
                
          }
@@ -164,7 +161,7 @@ class Board {
          }
 
          bool isMerged(){
-            return bitboards.size() > 8;
+            return bitboards.size() > 8 || bitboards.size() == 1;
          }
 
          Board occupiedPartOfBoard(){
@@ -191,6 +188,20 @@ class Board {
             BitBoard unoccupiedBitBoard = BitBoard (~(bitboards[blackBitboardIndex].getBits()) & ~(bitboards[whiteBitboardIndex].getBits()), {UNDEFINED_PIECE, UNDEFINED_COLOR});
             std::vector<BitBoard> initialBitBoards = {unoccupiedBitBoard};
             return Board(initialBitBoards);
+         }
+
+         std::vector<Field> getOccupiedFields(){
+            std::vector<Field> occupiedFields;
+            if (isMerged()){
+                for(auto bitboards : bitboards){
+                    std::vector<Field> updatedFields = bitboards.getFieldListWithPiecesOfBitboard();
+                    for (Field field : updatedFields)
+                        occupiedFields.push_back(field);
+                }
+            }      
+            else 
+                std::cout << "Bitboards not merged! Cannot get occupied fields." << std::endl;
+            return occupiedFields;
          }
 
          std::vector<Field> drawOccupiedFields(sf::RenderWindow &window){
@@ -232,6 +243,17 @@ class Board {
             for (Field field : unoccupiedFields)
                 std::cout << "Unoccupied Field at Index: " << field.getIndex() << std::endl;
          }  
+         
+         Field firstTargetField(int x, int y){
+            std::vector<Field> occupiedFields = getOccupiedFields();
+            for (Field field : occupiedFields){
+                if (field.getSquare().getGlobalBounds().contains(x,y)){
+                    std::cout << "Selected Field at: x: " << x << " y: " << y << " PieceType: " << field.getPiece().getPieceType() << std::endl;
+                    return field;
+                }
+                    
+            }
+            std::cout << "No field found at these coordinates, or empty field! Try again." << std::endl;
+            return Field({-1,-1}, Piece(UNDEFINED_PIECE, UNDEFINED_COLOR));
+         }
 };
-
-//Field Klasse muss Fields anzeigen können
