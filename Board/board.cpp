@@ -12,6 +12,8 @@ class Field{
         sf::RectangleShape square;
         sf::Texture pieceTexture;
     public:
+        Field() : coordinates({-1,-1}), piece(Piece(UNDEFINED_PIECE, UNDEFINED_COLOR)){
+        }
 
         Field(std::pair<int,int> initialCoordinates, Piece initialPiece)
         : coordinates(initialCoordinates), piece(initialPiece){
@@ -121,6 +123,7 @@ class Board {
         std::vector<BitBoard> bitboards;
 
     public:
+        Field selectedField;
 
         Board(std::vector<BitBoard> initialBitboards) : bitboards(initialBitboards) {
                
@@ -204,6 +207,11 @@ class Board {
             return occupiedFields;
          }
 
+         std::vector<Field> getUnoccupiedFields(){
+            BitBoard unoccupiedBitBoard = unoccupiedPartOfBoard().bitboards[0];
+            return unoccupiedBitBoard.getFieldListWithPiecesOfBitboard();
+         }
+
          std::vector<Field> drawOccupiedFields(sf::RenderWindow &window){
             std::vector<Field> occupiedFields;
             if (isMerged()){
@@ -249,6 +257,7 @@ class Board {
             for (Field field : occupiedFields){
                 if (field.getSquare().getGlobalBounds().contains(x,y)){
                     std::cout << "Selected Field at: x: " << x << " y: " << y << " PieceType: " << field.getPiece().getPieceType() << std::endl;
+                    //selectedField = field;
                     return field;
                 }
                     
@@ -256,4 +265,30 @@ class Board {
             std::cout << "No field found at these coordinates, or empty field! Try again." << std::endl;
             return Field({-1,-1}, Piece(UNDEFINED_PIECE, UNDEFINED_COLOR));
          }
+
+        std::vector<Field> getAllFields(){
+            std::vector<Field> allFields;
+            Board occupiedBoard = occupiedPartOfBoard();
+            Board unoccupiedBoard = unoccupiedPartOfBoard();
+            std::vector<Field> occupiedFields = occupiedBoard.getOccupiedFields();
+            std::vector<Field> unoccupiedFields = unoccupiedBoard.getUnoccupiedFields();
+            for (Field field : occupiedFields)
+                allFields.push_back(field);
+            for (Field field : unoccupiedFields)
+                allFields.push_back(field);
+            return allFields;
+         }
+
+         Field secondTargetField(int x, int y){
+            std::vector<Field> allFields = getAllFields();
+            for (Field field : allFields){
+                if (field.getSquare().getGlobalBounds().contains(x,y)){
+                    std::cout << "Selected Field at: x: " << x << " y: " << y << " PieceType: " << field.getPiece().getPieceType() << std::endl;
+                    return field;
+                }
+                    
+            }
+            std::cout << "No field found at these coordinates! Try again." << std::endl;
+            return Field({-1,-1}, Piece(UNDEFINED_PIECE, UNDEFINED_COLOR));
+         }  
 };
