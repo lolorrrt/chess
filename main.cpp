@@ -28,14 +28,15 @@ int main() {
     std::vector<BitBoard> chessboardBitBoards  = {blackBitBoard, whiteBitBoard, pawnBitBoard, knightBitBoard, bishopBitBoard, rookBitBoard, queenBitBoard, kingBitBoard};
     Board chessboard = Board(chessboardBitBoards);
 
-    Board mergedChessBoard = chessboard.mergeChessBoard();
-    drawTextBox(window);
+    Board occupiedChessBoard = chessboard.occupiedPartOfBoard();
+    Board unoccupiedChessBoard = chessboard.unoccupiedPartOfBoard();
+
+    occupiedChessBoard.printOccupiedFields();
+    unoccupiedChessBoard.printUnoccupiedFields();
     
-    std::vector<Field> occupiedFieldList = mergedChessBoard.drawOccupiedFields(window);
-    chessboard.drawUnoccupiedFields(window);
+    std::vector<Field> occupiedFieldList = occupiedChessBoard.drawOccupiedFields(window);
+    std::vector<Field> unoccupiedFieldList = unoccupiedChessBoard.drawUnoccupiedFields(window);
     
-    //Field field = Field({7,7}, Piece(PAWN, BLACK));
-    //field.draw(window);
     window.display();
 
     sf::Event userInput;
@@ -50,13 +51,8 @@ int main() {
             }if (event.type == sf::Event::MouseButtonPressed)
             {
                 sf::Vector2 mousePosition = sf::Mouse::getPosition(window);
-                //Field selectedField = chessboardFields[0];
                 std::cout << mousePosition.x << std::endl;
                 std::cout << mousePosition.y << std::endl;
-                //Piece selectedPiece = selectedField.getPiece();
-                //std::cout << "Selected piece: " << selectedPiece.getPieceType() << "at: " << std::endl;
-                //std::cout << selectedPiece.getCurrentPosition().first << std::endl;
-                //std::cout << selectedPiece.getCurrentPosition().second << std::endl;
             }
             
             

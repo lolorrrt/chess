@@ -53,6 +53,10 @@ class Field{
             window.draw(square);
             window.draw(drawPiece());
         }
+
+        void undrawPiece(sf::RenderWindow &window){
+            window.draw(square);
+        }
 };
 
 struct BitBoardType{
@@ -163,7 +167,7 @@ class Board {
             return bitboards.size() > 8;
          }
 
-         Board mergeChessBoard(){
+         Board occupiedPartOfBoard(){
             BitBoard whitePawns = mergeBitBoard(PAWN, WHITE);
             BitBoard blackPawns = mergeBitBoard(PAWN, BLACK);
             BitBoard whiteKnights = mergeBitBoard(KNIGHT, WHITE);
@@ -178,6 +182,14 @@ class Board {
             BitBoard blackKings = mergeBitBoard(KING, BLACK);
 
             std::vector<BitBoard> initialBitBoards = {whitePawns, blackPawns, whiteKnights, blackKnights, whiteBishops, blackBishops, whiteRooks, blackRooks, whiteQueens, blackQueens, whiteKings, blackKings};
+            return Board(initialBitBoards);
+         }
+
+         Board unoccupiedPartOfBoard(){
+            int blackBitboardIndex = findBitBoardIndexOfBitBoardColorType(BLACK);
+            int whiteBitboardIndex = findBitBoardIndexOfBitBoardColorType(WHITE);
+            BitBoard unoccupiedBitBoard = BitBoard (~(bitboards[blackBitboardIndex].getBits()) & ~(bitboards[whiteBitboardIndex].getBits()), {UNDEFINED_PIECE, UNDEFINED_COLOR});
+            std::vector<BitBoard> initialBitBoards = {unoccupiedBitBoard};
             return Board(initialBitBoards);
          }
 
@@ -196,12 +208,30 @@ class Board {
             
          }
 
+         void printOccupiedFields(){
+            if (isMerged()){
+                for(auto bitboards : bitboards){
+                    std::vector<Field> updatedFields = bitboards.getFieldListWithPiecesOfBitboard();
+                    for (Field field : updatedFields)
+                        std::cout << "Piece: " << field.getPiece().getPieceType() << " Color: " << field.getPiece().getColor() << " at Index: " << field.getIndex() << std::endl;
+                }
+            }      
+            else 
+                std::cout << "Bitboards not merged! Cannot be printed." << std::endl;
+         }
+
          std::vector<Field> drawUnoccupiedFields(sf::RenderWindow &window){
+            return bitboards[0].drawBitBoardPieces(window);
+         }
+
+         void printUnoccupiedFields(){
             int blackBitboardIndex = findBitBoardIndexOfBitBoardColorType(BLACK);
             int whiteBitboardIndex = findBitBoardIndexOfBitBoardColorType(WHITE);
-            BitBoard unoccupiedBitBoard = BitBoard (~(bitboards[blackBitboardIndex].getBits()) & ~(bitboards[whiteBitboardIndex].getBits()), {UNDEFINED_PIECE, UNDEFINED_COLOR});
-            return unoccupiedBitBoard.drawBitBoardPieces(window);
-         }
+            BitBoard unoccupiedBitBoard = unoccupiedPartOfBoard().bitboards[0];
+            std::vector<Field> unoccupiedFields = unoccupiedBitBoard.getFieldListWithPiecesOfBitboard();
+            for (Field field : unoccupiedFields)
+                std::cout << "Unoccupied Field at Index: " << field.getIndex() << std::endl;
+         }  
 };
 
 //Field Klasse muss Fields anzeigen können
