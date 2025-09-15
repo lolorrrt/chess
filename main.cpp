@@ -55,12 +55,8 @@ int main() {
                 std::cout << mousePosition.y << std::endl;
                 Field firstField = occupiedChessBoard.firstTargetField(mousePosition.x, mousePosition.y); 
                 Field secondField = chessboard.secondTargetField(mousePosition.x, mousePosition.y);
-            }
-            
-            
+            }      
         }
-        
-        
     }
 
     return 0;
