@@ -53,8 +53,8 @@ int main() {
                 sf::Vector2 mousePosition = sf::Mouse::getPosition(window);
                 std::cout << mousePosition.x << std::endl;
                 std::cout << mousePosition.y << std::endl;
-                Field firstField = occupiedChessBoard.firstTargetField(mousePosition.x, mousePosition.y); 
-                Field secondField = chessboard.secondTargetField(mousePosition.x, mousePosition.y);
+                Field firstField = occupiedChessBoard.getMoveOrigin(mousePosition.x, mousePosition.y); 
+                Field secondField = chessboard.getMoveTarget(mousePosition.x, mousePosition.y);
             }      
         }
     }

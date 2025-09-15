@@ -126,7 +126,7 @@ void Board::printUnoccupiedFields(){
         std::cout << "Unoccupied Field at Index: " << field.getIndex() << std::endl;
 }  
          
-Field Board::firstTargetField(int x, int y){
+Field Board::getMoveOrigin(int x, int y){
     std::vector<Field> occupiedFields = getOccupiedFields();
     for (Field field : occupiedFields){
         if (field.getSquare().getGlobalBounds().contains(x,y)){
@@ -153,7 +153,7 @@ std::vector<Field> Board::getAllFields(){
     return allFields;
 }
 
-Field Board::secondTargetField(int x, int y){
+Field Board::getMoveTarget(int x, int y){
     std::vector<Field> allFields = getAllFields();
     for (Field field : allFields){
         if (field.getSquare().getGlobalBounds().contains(x,y)){

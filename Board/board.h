@@ -5,7 +5,8 @@ class Board {
         std::vector<BitBoard> bitboards;
 
     public:
-        Field selectedField;
+        Field moveOrigin;
+        Field moveTarget;
 
         Board(std::vector<BitBoard> initialBitboards);
 
@@ -39,9 +40,9 @@ class Board {
 
         void printUnoccupiedFields();
          
-        Field firstTargetField(int x, int y);
+        Field getMoveOrigin(int x, int y);
 
         std::vector<Field> getAllFields();
 
-        Field secondTargetField(int x, int y);  
+        Field getMoveTarget(int x, int y);  
 };
