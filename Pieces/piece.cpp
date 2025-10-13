@@ -1,5 +1,6 @@
 #include <vector>
 #include <SFML/Graphics.hpp>
+
 enum PieceType{
     PAWN,
     KNIGHT,
@@ -14,23 +15,6 @@ enum Color{
     WHITE,
     BLACK,
     UNDEFINED_COLOR
-};
-
-class Move{
-    private:
-        std::pair<int,int> movementVector;
-
-    public:
-        Move(std::pair<int,int> initialMovementVector) : movementVector(initialMovementVector) {
-        }
-    
-        int getComponentX(){
-            return movementVector.first;
-        }
-
-        int getComponentY(){
-            return movementVector.second;
-        }
 };
 
 class Piece{

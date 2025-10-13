@@ -29,6 +29,14 @@ int Field::getIndex(){
     return coordinates.second * 8 + coordinates.first;
 }
 
+std::pair<int,int> Field::getCoordinates(){
+    return coordinates;
+}
+
+bool Field::isNotInitialized(){
+    return coordinates.first == -1;
+}
+
 sf::Sprite Field::drawPiece(){
     if (piece.getPieceType() == UNDEFINED_PIECE || piece.getColor() == UNDEFINED_COLOR)
         return sf::Sprite();

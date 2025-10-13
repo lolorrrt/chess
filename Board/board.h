@@ -1,5 +1,8 @@
 #include "bitboard.cpp"
 
+#ifndef BOARD
+#define BOARD
+
 class Board {
     private:
         std::vector<BitBoard> bitboards;
@@ -20,7 +23,7 @@ class Board {
 
         BitBoard mergeBitBoard(enum PieceType piece, enum Color color);
 
-        BitBoard updateBitboard(BitBoard bitboard, Move move, Piece movedPiece);
+        //BitBoard updateBitboard(BitBoard bitboard, Move move, Piece movedPiece);
 
         bool isMerged();
 
@@ -46,3 +49,5 @@ class Board {
 
         Field getMoveTarget(int x, int y);  
 };
+
+#endif BOARD

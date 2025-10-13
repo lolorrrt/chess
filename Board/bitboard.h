@@ -5,6 +5,9 @@ struct BitBoardType{
     Color color;
 };
 
+#ifndef BITBOARD
+#define BITBOARD
+
 class BitBoard{
     private:
        int64_t bits;
@@ -26,3 +29,5 @@ class BitBoard{
         std::vector<Field> drawBitBoardPieces(sf::RenderWindow &window);
 
 };
+
+#endif BITBOARD

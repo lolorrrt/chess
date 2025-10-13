@@ -2,12 +2,14 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
-/*#ifndef FIELD
-#define FIELD*/
+#ifndef FIELD
+#define FIELD
+
+#define squareSize 100
 
 class Field{
     private:
-        const float squareSize = 100;
+    
         std::pair<int,int> coordinates;
         Piece piece;
         sf::RectangleShape square;
@@ -23,6 +25,10 @@ class Field{
 
         int getIndex();
 
+        std::pair<int,int> getCoordinates();
+
+        bool isNotInitialized();
+        
         sf::Sprite drawPiece();
 
         void draw(sf::RenderWindow &window);
@@ -32,4 +38,4 @@ class Field{
         bool isOutOfBounds();
     };
 
-//#endif FIELD
+#endif FIELD

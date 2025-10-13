@@ -34,9 +34,9 @@ BitBoard Board::mergeBitBoard(enum PieceType piece, enum Color color){
     return BitBoard(bits, {piece, color});
 }
 
-BitBoard Board::updateBitboard(BitBoard bitboard, Move move, Piece movedPiece){
+/*BitBoard Board::updateBitboard(BitBoard bitboard, Move move, Piece movedPiece){
     return bitboard; // To be implemented
-    }
+    }*/
 
 bool Board::isMerged(){
     return bitboards.size() > 8 || bitboards.size() == 1;
@@ -56,7 +56,8 @@ Board Board::occupiedPartOfBoard(){
     BitBoard whiteKings = mergeBitBoard(KING, WHITE);
     BitBoard blackKings = mergeBitBoard(KING, BLACK);
 
-    std::vector<BitBoard> initialBitBoards = {whitePawns, blackPawns, whiteKnights, blackKnights, whiteBishops, blackBishops, whiteRooks, blackRooks, whiteQueens, blackQueens, whiteKings, blackKings};
+    std::vector<BitBoard> initialBitBoards = {whitePawns, blackPawns, whiteKnights, blackKnights, whiteBishops,
+    blackBishops, whiteRooks, blackRooks, whiteQueens, blackQueens, whiteKings, blackKings};
     return Board(initialBitBoards);
 }
 
@@ -105,8 +106,8 @@ void Board::printOccupiedFields(){
     if (isMerged()){
         for(auto bitboards : bitboards){
             std::vector<Field> updatedFields = bitboards.getFieldListWithPiecesOfBitboard();
-            for (Field field : updatedFields)
-                std::cout << "Piece: " << field.getPiece().getPieceType() << " Color: " << field.getPiece().getColor() << " at Index: " << field.getIndex() << std::endl;
+            //for (Field field : updatedFields)
+               // std::cout << "Piece: " << field.getPiece().getPieceType() << " Color: " << field.getPiece().getColor() << " at Index: " << field.getIndex() << std::endl;
         }
     }      
     else 
@@ -122,15 +123,15 @@ void Board::printUnoccupiedFields(){
     int whiteBitboardIndex = findBitBoardIndexOfBitBoardColorType(WHITE);
     BitBoard unoccupiedBitBoard = unoccupiedPartOfBoard().bitboards[0];
     std::vector<Field> unoccupiedFields = unoccupiedBitBoard.getFieldListWithPiecesOfBitboard();
-    for (Field field : unoccupiedFields)
-        std::cout << "Unoccupied Field at Index: " << field.getIndex() << std::endl;
+    //for (Field field : unoccupiedFields)
+      //  std::cout << "Unoccupied Field at Index: " << field.getIndex() << std::endl;
 }  
          
 Field Board::getMoveOrigin(int x, int y){
     std::vector<Field> occupiedFields = getOccupiedFields();
     for (Field field : occupiedFields){
         if (field.getSquare().getGlobalBounds().contains(x,y)){
-            std::cout << "Selected Field at: x: " << x << " y: " << y << " PieceType: " << field.getPiece().getPieceType() << std::endl;
+           std::cout << "Selected MoveOrigin at: x: " << x << " y: " << y << " PieceType: " << field.getPiece().getPieceType() << std::endl;
             //selectedField = field;
             return field;
         }
@@ -157,7 +158,7 @@ Field Board::getMoveTarget(int x, int y){
     std::vector<Field> allFields = getAllFields();
     for (Field field : allFields){
         if (field.getSquare().getGlobalBounds().contains(x,y)){
-            std::cout << "Selected Field at: x: " << x << " y: " << y << " PieceType: " << field.getPiece().getPieceType() << std::endl;
+            std::cout << "Selected MoveTarget at: x: " << x << " y: " << y << " PieceType: " << field.getPiece().getPieceType() << std::endl;
             return field;
         }
                     

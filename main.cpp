@@ -1,7 +1,7 @@
 #include <SFML/Window/Event.hpp>
 #include <iostream>
 #include <functional>
-#include "Board/board.cpp"
+#include "Board/Move.cpp"
 #include <typeinfo>
 
 BitBoard blackBitBoard(0xFFFF000000000000, {UNDEFINED_PIECE, BLACK});
@@ -39,22 +39,26 @@ int main() {
     
     window.display();
 
-    sf::Event userInput;
-    userInput.type = sf::Event::TextEntered;
-    
+    Field moveOriginField;
+    Field moveTargetField;
+    //std::cout << moveOriginField.coordinates.first << std::endl;
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
                 window.close();
-            std::cout << "select Field" << std::endl;
             }if (event.type == sf::Event::MouseButtonPressed)
-            {
+            {   
+                std::cout << "select Field" << std::endl;
                 sf::Vector2 mousePosition = sf::Mouse::getPosition(window);
                 std::cout << mousePosition.x << std::endl;
                 std::cout << mousePosition.y << std::endl;
-                Field firstField = occupiedChessBoard.getMoveOrigin(mousePosition.x, mousePosition.y); 
-                Field secondField = chessboard.getMoveTarget(mousePosition.x, mousePosition.y);
+                if(moveOriginField.isNotInitialized())
+                    moveOriginField = occupiedChessBoard.getMoveOrigin(mousePosition.x, mousePosition.y); 
+                else
+                    moveTargetField = chessboard.getMoveTarget(mousePosition.x, mousePosition.y);
+
+                Move move = Move(moveOriginField, moveTargetField);
             }      
         }
     }
