@@ -146,12 +146,12 @@ std::vector<Field> Board::getAllFields(){
     Board occupiedBoard = occupiedPartOfBoard();
     Board unoccupiedBoard = unoccupiedPartOfBoard();
     std::vector<Field> occupiedFields = occupiedBoard.getOccupiedFields();
-    std::vector<Field> unoccupiedFields = unoccupiedBoard.getUnoccupiedFields();
+    std::vector<Field> unoccupiedFields = getUnoccupiedFields();
     for (Field field : occupiedFields)
         allFields.push_back(field);
     for (Field field : unoccupiedFields)
         allFields.push_back(field);
-    return unoccupiedFields;
+    return allFields;
 }
 
 void Board::printAllFields(){
@@ -164,7 +164,7 @@ void Board::printAllFields(){
 
 Field Board::getMoveTarget(int x, int y){
     std::vector<Field> allFields = getAllFields();
-    printAllFields();
+    
     for (Field field : allFields){
         if (field.getSquare().getGlobalBounds().contains(x,y)){
             std::cout << "Selected MoveTarget at: x: " << x << " y: " << y << " PieceType: " << field.getPiece().getPieceType() << std::endl;
