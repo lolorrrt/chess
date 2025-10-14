@@ -1,5 +1,8 @@
 #include "Move.h"
 
+Move::Move(){
+}
+
 Move::Move(Field origin, Field target) : moveOrigin(origin), moveTarget(target){
 
 };

@@ -106,8 +106,8 @@ void Board::printOccupiedFields(){
     if (isMerged()){
         for(auto bitboards : bitboards){
             std::vector<Field> updatedFields = bitboards.getFieldListWithPiecesOfBitboard();
-            //for (Field field : updatedFields)
-               // std::cout << "Piece: " << field.getPiece().getPieceType() << " Color: " << field.getPiece().getColor() << " at Index: " << field.getIndex() << std::endl;
+            for (Field field : updatedFields)
+               std::cout << "Piece: " << field.getPiece().getPieceType() << " Color: " << field.getPiece().getColor() << " at Index: " << field.getIndex() << std::endl;
         }
     }      
     else 
@@ -123,8 +123,8 @@ void Board::printUnoccupiedFields(){
     int whiteBitboardIndex = findBitBoardIndexOfBitBoardColorType(WHITE);
     BitBoard unoccupiedBitBoard = unoccupiedPartOfBoard().bitboards[0];
     std::vector<Field> unoccupiedFields = unoccupiedBitBoard.getFieldListWithPiecesOfBitboard();
-    //for (Field field : unoccupiedFields)
-      //  std::cout << "Unoccupied Field at Index: " << field.getIndex() << std::endl;
+    for (Field field : unoccupiedFields)
+        std::cout << "Unoccupied Field at Index: " << field.getIndex() << std::endl;
 }  
          
 Field Board::getMoveOrigin(int x, int y){
@@ -151,11 +151,20 @@ std::vector<Field> Board::getAllFields(){
         allFields.push_back(field);
     for (Field field : unoccupiedFields)
         allFields.push_back(field);
-    return allFields;
+    return unoccupiedFields;
+}
+
+void Board::printAllFields(){
+    std::vector<Field> allFields = getAllFields();
+    for(Field field : allFields)
+        field.print();
+
+    std::cout << "Anzahl aller Felder: " << allFields.size() << std::endl;
 }
 
 Field Board::getMoveTarget(int x, int y){
     std::vector<Field> allFields = getAllFields();
+    printAllFields();
     for (Field field : allFields){
         if (field.getSquare().getGlobalBounds().contains(x,y)){
             std::cout << "Selected MoveTarget at: x: " << x << " y: " << y << " PieceType: " << field.getPiece().getPieceType() << std::endl;

@@ -36,6 +36,10 @@ class Field{
         void undrawPiece(sf::RenderWindow &window);
 
         bool isOutOfBounds();
+
+        void reset();
+
+        void print();
     };
 
 #endif FIELD

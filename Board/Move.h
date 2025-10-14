@@ -9,6 +9,7 @@ class Move{
         Field moveTarget;
 
     public:
+        Move();
         Move(Field origin, Field target);
 
         bool isValid();

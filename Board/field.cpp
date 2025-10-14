@@ -5,11 +5,15 @@
 
 Field::Field() : coordinates({-1,-1}), piece(Piece(UNDEFINED_PIECE, UNDEFINED_COLOR)){}
 
+int coordinateForDrawing(int coord){
+    return float(coord) < 3.5 ? coord + 2*(3.5-coord) : coord + 2*(3.5-coord); 
+}
+
 Field::Field(std::pair<int,int> initialCoordinates, Piece initialPiece)
 : coordinates(initialCoordinates), piece(initialPiece){
 
     square.setSize(sf::Vector2f(squareSize, squareSize));
-    square.setPosition(coordinates.first * squareSize, coordinates.second * squareSize);
+    square.setPosition(coordinates.first * squareSize, coordinateForDrawing(coordinates.second) * squareSize);
             
     if ((coordinates.first + coordinates.second) % 2 == 1)
         square.setFillColor(sf::Color::Blue);
@@ -45,7 +49,7 @@ sf::Sprite Field::drawPiece(){
     sf::Sprite pieceSprite;
     pieceSprite.setTexture(pieceTexture);
     pieceSprite.setScale(0.3f, 0.3f); 
-    pieceSprite.setPosition(coordinates.first *100+ 15,coordinates.second *100+15);
+    pieceSprite.setPosition(coordinates.first *100+ 15,coordinateForDrawing(coordinates.second) *100+15);
 
     return pieceSprite;
 }
@@ -61,4 +65,12 @@ void Field::undrawPiece(sf::RenderWindow &window){
 
 bool Field::isOutOfBounds(){
     return coordinates.first < 0 || coordinates.first > 7 || coordinates.second < 0 || coordinates.second > 7;
+}
+
+void Field::reset(){
+    coordinates = {-1,-1};
+}
+
+void Field::print(){
+    std::cout << "At Field index: " << getIndex() << " and has PieceType " << getPiece().getPieceType() << std::endl;
 }

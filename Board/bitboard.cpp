@@ -27,9 +27,9 @@ std::vector<std::pair<int,int>> BitBoard::getCoordinateList(){
 std::vector<Field> BitBoard::getFieldListWithPiecesOfBitboard(){
     std::vector<Field> fields;
     std::vector<std::pair<int,int>> coordinates = getCoordinateList();
-    for (auto coordinate : coordinates){
+    for (auto coordinate : coordinates)
         fields.push_back(Field(coordinate, Piece(bitboardtype.piecetype, bitboardtype.color)));
-    }
+
     return fields;
 };
 

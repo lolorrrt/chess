@@ -47,6 +47,8 @@ class Board {
 
         std::vector<Field> getAllFields();
 
+        void printAllFields();
+
         Field getMoveTarget(int x, int y);  
 };
 
