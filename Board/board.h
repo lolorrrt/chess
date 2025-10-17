@@ -23,7 +23,7 @@ class Board {
 
         BitBoard mergeBitBoard(enum PieceType piece, enum Color color);
 
-        //BitBoard updateBitboard(BitBoard bitboard, Move move, Piece movedPiece);
+        void updateBitboards(Field moveOrigin, Field moveTarget);
 
         bool isMerged();
 

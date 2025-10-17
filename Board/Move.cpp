@@ -1,11 +1,8 @@
 #include "Move.h"
 
-Move::Move(){
-}
+Move::Move(){}
 
-Move::Move(Field origin, Field target) : moveOrigin(origin), moveTarget(target){
-
-};
+Move::Move(Field origin, Field target) : moveOrigin(origin), moveTarget(target){}
 
 bool Move::hasPiece(){
     return moveOrigin.getPiece().getPieceType() != UNDEFINED_PIECE; 
@@ -27,8 +24,21 @@ void Move::drawUpdatedBoard(){
 
 };
 
-void Move::execute(){
+void Move::execute(sf::RenderWindow &window, Board chessboard){
+    if(!moveOrigin.isNotInitialized() && !moveTarget.isNotInitialized()){
+        chessboard.updateBitboards(moveOrigin, moveTarget);
+        moveOrigin.undrawPiece(window);
+        moveTarget.drawPiece();
 
+        /*Board occupiedChessBoard = chessboard.occupiedPartOfBoard();
+        Board unoccupiedChessBoard = chessboard.unoccupiedPartOfBoard();
+
+        std::vector<Field> occupiedFieldList = occupiedChessBoard.drawOccupiedFields(window);
+        std::vector<Field> unoccupiedFieldList = unoccupiedChessBoard.drawUnoccupiedFields(window);*/
+
+        window.display();
+    }
+    
 };
 
 void Move::printInformation(){

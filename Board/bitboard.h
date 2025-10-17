@@ -28,6 +28,12 @@ class BitBoard{
 
         std::vector<Field> drawBitBoardPieces(sf::RenderWindow &window);
 
+        void printBitBoard();
+
+        void unSetField(Field field);
+
+        void setField(Field field);
+
 };
 
 #endif BITBOARD

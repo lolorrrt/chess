@@ -22,7 +22,7 @@ void drawTextBox(sf::RenderWindow &window){
 }
 
 int main() {
-    sf::RenderWindow window(sf::VideoMode(1000, 1000), "Chess");
+    sf::RenderWindow window(sf::VideoMode(800, 800), "Chess");
     window.clear(sf::Color::White);
 
     std::vector<BitBoard> chessboardBitBoards  = {blackBitBoard, whiteBitBoard, pawnBitBoard, knightBitBoard, bishopBitBoard, rookBitBoard, queenBitBoard, kingBitBoard};
@@ -31,9 +31,6 @@ int main() {
     Board occupiedChessBoard = chessboard.occupiedPartOfBoard();
     Board unoccupiedChessBoard = chessboard.unoccupiedPartOfBoard();
 
-    occupiedChessBoard.printOccupiedFields();
-    unoccupiedChessBoard.printUnoccupiedFields();
-    
     std::vector<Field> occupiedFieldList = occupiedChessBoard.drawOccupiedFields(window);
     std::vector<Field> unoccupiedFieldList = unoccupiedChessBoard.drawUnoccupiedFields(window);
     
@@ -41,7 +38,8 @@ int main() {
 
     Field moveOriginField;
     Field moveTargetField;
-    //std::cout << moveOriginField.coordinates.first << std::endl;
+    Move testMove;
+
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
@@ -49,16 +47,23 @@ int main() {
                 window.close();
             }if (event.type == sf::Event::MouseButtonPressed)
             {   
-                std::cout << "select Field" << std::endl;
                 sf::Vector2 mousePosition = sf::Mouse::getPosition(window);
-                std::cout << mousePosition.x << std::endl;
-                std::cout << mousePosition.y << std::endl;
-                if(moveOriginField.isNotInitialized())
+                
+                if(moveOriginField.isNotInitialized()){
+                    std::cout << "select origin" << std::endl;
                     moveOriginField = occupiedChessBoard.getMoveOrigin(mousePosition.x, mousePosition.y); 
-                else
+                }   
+                else{
+                    std::cout << "select target" << std::endl;
                     moveTargetField = chessboard.getMoveTarget(mousePosition.x, mousePosition.y);
+                    testMove = Move(moveOriginField, moveTargetField);
+                    moveOriginField.reset();
+                    moveTargetField.reset();
+                    testMove.execute(window, chessboard);
 
-                Move move = Move(moveOriginField, moveTargetField);
+                    window.display();
+                }
+                
             }      
         }
     }

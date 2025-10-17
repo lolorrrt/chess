@@ -34,9 +34,22 @@ BitBoard Board::mergeBitBoard(enum PieceType piece, enum Color color){
     return BitBoard(bits, {piece, color});
 }
 
-/*BitBoard Board::updateBitboard(BitBoard bitboard, Move move, Piece movedPiece){
-    return bitboard; // To be implemented
-    }*/
+void Board::updateBitboards(Field moveOrigin, Field moveTarget){
+    BitBoard pieceBitBoard = bitboards[findBitBoardIndexOfBitBoardPieceType(moveOrigin.getPiece().getPieceType())];
+    pieceBitBoard.printBitBoard();
+
+    BitBoard colorBitBoard = bitboards[findBitBoardIndexOfBitBoardColorType(moveOrigin.getPiece().getColor())];
+    colorBitBoard.printBitBoard();
+
+    pieceBitBoard.unSetField(moveOrigin);
+    colorBitBoard.unSetField(moveTarget);
+
+    //pieceBitBoard.setField(moveTarget);
+    //colorBitBoard.setField(moveTarget);
+
+    pieceBitBoard.printBitBoard();
+    colorBitBoard.printBitBoard();
+}
 
 bool Board::isMerged(){
     return bitboards.size() > 8 || bitboards.size() == 1;

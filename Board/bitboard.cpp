@@ -1,4 +1,5 @@
 #include "bitboard.h"
+#include <math.h>
 
 BitBoard::BitBoard() : bits(0), bitboardtype(){}
 BitBoard::BitBoard(int64_t initialBits, BitBoardType initialBitBoardType)
@@ -39,3 +40,19 @@ std::vector<Field> BitBoard::drawBitBoardPieces(sf::RenderWindow &window){
         field.draw(window);
     return fieldList;
 };
+
+void BitBoard::unSetField(Field field){
+    int index = field.getIndex();
+    int64_t summand = int64_t (std::pow(2, index));
+    bits -=summand;  
+}
+
+void BitBoard::setField(Field field){
+    int index = field.getIndex();
+    int64_t summand = int64_t (std::pow(2, index));
+    bits +=summand;  
+}
+
+void BitBoard::printBitBoard(){
+    std::cout << "bits: " << getBits() << " color: " << bitboardtype.color << " piecetype " << bitboardtype.piecetype << std::endl;
+}

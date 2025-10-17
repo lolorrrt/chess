@@ -20,11 +20,9 @@ class Move{
 
         bool piecesOfDifferentColor();
 
-        Board updateBoard();
-
         void drawUpdatedBoard();
 
-        void execute();
+        void execute(sf::RenderWindow &window, Board chessboard);
 
         void printInformation();
 };
